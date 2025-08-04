@@ -1,0 +1,53 @@
+# Unreal Engine
+###############################
+
+# Build outputs and intermediates
+Binaries/
+DerivedDataCache/
+Intermediate/
+Saved/
+Build/
+
+# Ignore local plugin intermediates
+Plugins/*/Binaries/
+Plugins/*/Intermediate/
+
+# Specific plugin paths (if needed)
+Plugins/Developer/
+Plugins/Inventory/Binaries/
+Plugins/Inventory/Intermediate/
+
+# Platform/project-specific files
+*.VC.db
+*.VC.opendb
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.userosscache
+*.log
+*.pdb
+*.ipch
+*.aps
+*.ncb
+*.obj
+*.pch
+*.dll
+*.exe
+*.bak
+*.tmp
+
+# IDE/editor folders
+.vscode/
+.idea/
+.DS_Store
+*.xcodeproj
+*.xcworkspace
+
+# Rider/Visual Studio metadata — prevents GitHub push errors
+.vs/
+.vs/**
+
+# Explicit large files GitHub rejects
+.vs/**/SemanticSymbols.db
+.vs/**/CodeChunks.db
