@@ -8,7 +8,7 @@
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 #include "Items/Inv_InventoryItem.h"
 #include "Items/Components/Inv_ItemComponent.h"
-#include "Items/Fragments/Inv_FragmentTags.h"
+#include "Items/Fragments/Tags/Inv_FragmentTags.h"
 #include "Items/Manifest/Inv_ItemManifest.h"
 #include "Widgets/Inventory/GridSlots/Inv_GridSlot.h"
 #include "Widgets/Inventory/SlottedItems/Inv_SlottedItem.h"
@@ -17,6 +17,7 @@
 #include "Inventory.h"
 #include "Widgets/Inventory/HoverItem/Inv_HoverItem.h"
 #include "Widgets/ItemPopUp/Inv_ItemPopUp.h"
+#include "Items/Fragments/Inv_AllFragments.h"
 
 void UInv_InventoryGrid::NativeOnInitialized()
 {

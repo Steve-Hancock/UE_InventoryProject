@@ -4,7 +4,7 @@
 #include "Types/Inv_GridTypes.h"
 #include "StructUtils/InstancedStruct.h"
 #include "GameplayTagContainer.h"
-#include "Items/Fragments/Inv_ItemFragment.h"
+#include "Items/Fragments/Base/Inv_ItemFragment.h"
 #include "Inv_ItemManifest.Generated.h"
 
 /**

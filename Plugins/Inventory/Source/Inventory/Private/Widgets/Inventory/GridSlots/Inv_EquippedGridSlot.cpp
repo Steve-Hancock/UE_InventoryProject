@@ -3,7 +3,6 @@
 
 #include "Widgets/Inventory/GridSlots/Inv_EquippedGridSlot.h"
 
-#include "PrecomputedVolumetricLightmap.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Widgets/Inventory/SlottedItems/Inv_EquippedSlottedItem.h"
 #include "Components/Image.h"
@@ -11,8 +10,8 @@
 #include "Components/OverlaySlot.h"
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 #include "Items/Inv_InventoryItem.h"
-#include "Items/Fragments/Inv_FragmentTags.h"
-#include "Items/Fragments/Inv_ItemFragment.h"
+#include "Items/Fragments/Tags/Inv_FragmentTags.h"
+#include "Items/Fragments/Inv_AllFragments.h"
 #include "Widgets/Inventory/HoverItem/Inv_HoverItem.h"
 
 void UInv_EquippedGridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

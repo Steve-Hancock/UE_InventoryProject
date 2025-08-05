@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Inv_Leaf.h"
-#include "Inv_Leaf_ScrollableLabeledValues.generated.h"
+#include "Inv_Leaf_MultipleLabeledValues.generated.h"
 
+class UVerticalBox;
 class UTextBlock;
-struct FInv_AbilitySystemModifier;
 class UInv_Leaf_LabeledValue;
-class UScrollBox;
+
 /**
  * 
  */
 UCLASS()
-class INVENTORY_API UInv_Leaf_ScrollableLabeledValues : public UInv_Leaf
+class INVENTORY_API UInv_Leaf_MultipleLabeledValues : public UInv_Leaf
 {
 	GENERATED_BODY()
 public:
 	virtual void NativeOnInitialized() override;
 
-	UScrollBox* GetScrollBox() const {return ScrollBox;}
+	UVerticalBox* GetVerticalBox() const {return VerticalBox;}
 
 	void SetFontSizeLabel(const int32 Fontsize);
 	void SetFontSizeValue(const int32 Fontsize);
@@ -28,7 +28,7 @@ public:
 
 private:
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UScrollBox> ScrollBox;
+	TObjectPtr<UVerticalBox> VerticalBox;
 
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	TSubclassOf<UInv_Leaf_LabeledValue> LabeledValueClass;

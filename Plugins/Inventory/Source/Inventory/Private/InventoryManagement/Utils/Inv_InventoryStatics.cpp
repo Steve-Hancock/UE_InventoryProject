@@ -3,13 +3,9 @@
 
 #include "InventoryManagement/Utils/Inv_InventoryStatics.h"
 #include "AbilitySystemComponent.h"
-#include "GameplayEffect.h"
-#include "GameplayCueNotify_Static.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "InventoryManagement/Components/Inv_InventoryComponent.h"
-#include "Items/Inv_InventoryItem.h"
 #include "Items/Components/Inv_ItemComponent.h"
-#include "Items/Fragments/Inv_FragmentTags.h"
 #include "Widgets/Inventory/InventoryBase/Inv_InventoryBase.h"
 
 UInv_InventoryComponent* UInv_InventoryStatics::GetInventoryComponent(APlayerController* PlayerController)

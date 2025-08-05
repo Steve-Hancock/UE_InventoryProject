@@ -8,6 +8,8 @@
 #include "Player/Inv_PlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Items/Inv_InventoryItem.h"
+#include "Items/Fragments/Inv_AllFragments.h"
+
 
 UInv_InventoryComponent::UInv_InventoryComponent()
 	:
@@ -79,10 +81,10 @@ void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemCom
 	{
 		ItemComponent->PickedUp();	
 	}
-	else if (FInv_StackableFragment* StackableFragment = ItemComponent->GetItemManifest().GetFragmentOfTypeMutable<FInv_StackableFragment>())
-	{
-		StackableFragment->SetStackCount(Remainder);
-	}
+	// else if (FInv_StackableFragment* StackableFragment = ItemComponent->GetItemManifest().GetFragmentOfTypeMutable<FInv_StackableFragment>())
+	// {
+	// 	StackableFragment->SetStackCount(Remainder);
+	// }
 }
 
 void UInv_InventoryComponent::Server_DropItem_Implementation(UInv_InventoryItem* Item, int32 StackCount)

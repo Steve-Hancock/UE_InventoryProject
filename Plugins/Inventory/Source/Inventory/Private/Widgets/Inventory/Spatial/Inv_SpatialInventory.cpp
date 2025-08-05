@@ -202,7 +202,7 @@ void UInv_SpatialInventory::EquippedSlottedItemClicked(UInv_EquippedSlottedItem*
 	UInv_InventoryItem* ItemToUnequip = EquippedSlottedItem->GetInventoryItem();
 
 	// Get the Equipped Grid slot Holding this item
-	UInv_EquippedGridSlot* EquippedGridSlot = FindSlotWithEquippedItem(ItemToEquip);
+	UInv_EquippedGridSlot* EquippedGridSlot = FindSlotWithEquippedItem(ItemToUnequip);
 	
 	// Clear the equipped grid slot of this item (set its inventory item to null)
 	ClearSlotOfItem(EquippedGridSlot);
