@@ -11,7 +11,9 @@
 #include "Features/Inv_StackableFragment.h"
 #include "Features/Inv_EquippableFragment.h"
 
-#include "AbilitySystem/Inv_AbilitySystemData.h"
+
 #include "AbilitySystem/Inv_AbilitySystemModifierFragment.h"
+#include "AbilitySystem/Inv_EffectModifierFragment.h"
+#include "AbilitySystem/Inv_AbilityModifierFragment.h"
 
 #include "Tags/Inv_FragmentTags.h"

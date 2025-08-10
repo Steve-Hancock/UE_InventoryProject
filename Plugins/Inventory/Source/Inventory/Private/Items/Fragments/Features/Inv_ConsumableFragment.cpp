@@ -1,5 +1,8 @@
 ﻿#include "Items/Fragments/Features/Inv_ConsumableFragment.h"
+
+#include "Items/Fragments/AbilitySystem/Inv_AbilityModifierFragment.h"
 #include "Items/Fragments/AbilitySystem/Inv_AbilitySystemModifierFragment.h"
+#include "Items/Fragments/AbilitySystem/Inv_EffectModifierFragment.h"
 
 void FInv_ConsumableFragment::Manifest()
 {
@@ -8,54 +11,42 @@ void FInv_ConsumableFragment::Manifest()
 
 void FInv_ConsumableFragment::Assimilate(UInv_CompositeBase* Composite) const
 {
-	
-	 for ( const FInv_AbilitySystemModifierFragment& Modifer : AbilityModifiers)
-	 {
-	 	Modifer.Assimilate(Composite);
-	 }
-
 	FInv_InventoryItemFragment::Assimilate(Composite);
-}
-
-FInv_AbilitySystemModifierFragment* FInv_ConsumableFragment::FindModifer(int32 Index) 
-{
-	 if (AbilityModifiers.IsValidIndex(Index))
-	 {
-	 	return &AbilityModifiers[Index];
-	 }
-
-	return nullptr;
-}
-
-FInv_AbilitySystemModifierFragment* FInv_ConsumableFragment::FindModiferByTag(const FGameplayTag& Tag)
-{
-	 if (AbilityModifiers.Num() == 0) return nullptr;
+	if (!MatchesWidgetTag(Composite)) return;
 	
-	 for (auto& Data : AbilityModifiers )
+	 for ( const TInstancedStruct<FInv_EffectModifierFragment>& Modifer : EffectModifiers)
 	 {
-		FInv_AbilitySystemModifierFragment* Modifer = &Data;
-	 		if ( Data.GetAbilityData().EffectTag == Tag )
-	 	{
-	 			return Modifer;
-	 	}
-	
-	 		if ( Data.GetAbilityData().AbilityTag == Tag )
-	 	{
-	 			return Modifer;
-	 	}
+		 if (Modifer.IsValid())
+		 {
+		 	const FInv_EffectModifierFragment& Modifier = Modifer.Get();
+		 	Modifier.Assimilate(Composite);
+		 }
 	 }
-
-	return nullptr;
+	
 }
+
 
 void  FInv_ConsumableFragment::OnConsume(APlayerController* PlayerController, UInv_InventoryItem* Item)
 {
-	if (!IsValid(PlayerController)) return;
+	if ( !IsValid(PlayerController) ) return;
 
-	if (AbilityModifiers.Num() == 0) return;
-	
-	 for ( auto& Data : AbilityModifiers )
-	 {
-		Data.ApplyModifer(PlayerController, Item);
-	 }
+	if (EffectModifiers.Num() > 0 )
+	{
+		for (TInstancedStruct<FInv_EffectModifierFragment>& Modifer : EffectModifiers)
+		{
+			if (Modifer.IsValid())
+			{
+				Modifer.GetMutable<FInv_EffectModifierFragment>().OnApply(PlayerController, Item);
+			}
+
+		}
+	}
+
+	if ( Abilities.Num() > 0)
+	{
+		for (TInstancedStruct<FInv_AbilityModifierFragment>& Ability : Abilities)
+		{
+			Ability.GetMutable<FInv_AbilityModifierFragment>().OnApply(PlayerController, Item);
+		}
+	}
 }

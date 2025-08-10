@@ -1,9 +1,9 @@
 ﻿#pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayAbilitySpecHandle.h"
+#include "GameplayCueNotify_Static.h"
 #include "GameplayTagContainer.h"
-#include "GameplayEffectTypes.h"
+
 
 
 #include "Inv_ItemFragment.generated.h"
