@@ -49,6 +49,9 @@ void UInv_EquipmentComponent::OnItemEquipped(UInv_InventoryItem* EquippedItem)
 
 void UInv_EquipmentComponent::OnItemUnequipped(UInv_InventoryItem* UnEquippedItem)
 {
+	// Add stack trace or unique identifier
+	UE_LOG(LogTemp, Warning, TEXT("OnUnequip called from: %s"), *FString(__FUNCTION__));
+
 	if (!UnEquippedItem) return;
 	if (!OwningPlayerController->HasAuthority()) return;
 
@@ -59,7 +62,6 @@ void UInv_EquipmentComponent::OnItemUnequipped(UInv_InventoryItem* UnEquippedIte
 	EquipmentFragment->OnUnequip(OwningPlayerController.Get(), UnEquippedItem);
 
 	RemoveEquippedActorByTag(EquipmentFragment->GetEquipmentType());
-	
 }
 
 void UInv_EquipmentComponent::InitInventoryComponent()

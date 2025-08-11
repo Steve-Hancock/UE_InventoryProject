@@ -130,8 +130,14 @@ void UInv_InventoryComponent::Multicast_EquipSlotClicked_Implementation(UInv_Inv
 	UInv_InventoryItem* ItemToUnEquip)
 {
 	// Equipment Component will listen to these delegates
-	OnItemEquipped.Broadcast(ItemToEquip);
-	OnItemUnequipped.Broadcast(ItemToUnEquip);
+	if (IsValid(ItemToEquip))
+	{
+		OnItemEquipped.Broadcast(ItemToEquip);
+	}
+	if (IsValid(ItemToUnEquip))
+	{
+		OnItemUnequipped.Broadcast(ItemToUnEquip);
+	}
 }
 
 void UInv_InventoryComponent::ToggleInventoryMenu()

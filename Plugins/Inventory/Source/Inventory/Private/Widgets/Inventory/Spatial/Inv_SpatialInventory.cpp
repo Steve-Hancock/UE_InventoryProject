@@ -3,6 +3,7 @@
 
 #include "Widgets/Inventory/Spatial/Inv_SpatialInventory.h"
 
+#include "IDetailTreeNode.h"
 #include "Inventory.h"
 #include "Components/Button.h"
 #include "Logging/LogMacros.h"
@@ -333,9 +334,15 @@ void UInv_SpatialInventory::BroadcastSlotClickedDelegates(UInv_InventoryItem* It
 	check(IsValid(InventoryComponent));
 	InventoryComponent->Server_EquipSlotClicked(ItemToEquip, ItemToUnequip);
 
-	if ( GetOwningPlayer()->GetNetMode() != ENetMode::NM_DedicatedServer)
-	{
-		InventoryComponent->OnItemEquipped.Broadcast(ItemToEquip);
-		InventoryComponent->OnItemUnequipped.Broadcast(ItemToUnequip);
-	}
+	// if ( GetOwningPlayer()->GetNetMode() != ENetMode::NM_DedicatedServer)
+	// {
+	// 	if (IsValid(ItemToEquip))
+	// 	{
+	// 		InventoryComponent->OnItemEquipped.Broadcast(ItemToEquip);
+	// 	}
+	// 	if (IsValid(ItemToUnequip))
+	// 	{
+	// 		InventoryComponent->OnItemUnequipped.Broadcast(ItemToUnequip);
+	// 	}
+	// }
 }
