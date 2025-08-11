@@ -178,10 +178,10 @@ void UInv_SpatialInventory::EquippedGridSlotClicked(UInv_EquippedGridSlot* Equip
 
 	InventoryComponent->Server_EquipSlotClicked(HoverItem->GetInventoryItem(), nullptr);
 
-	if (GetOwningPlayer()->GetNetMode() != ENetMode::NM_DedicatedServer)
-	{
-		InventoryComponent->OnItemEquipped.Broadcast(HoverItem->GetInventoryItem());
-	}
+	// if (GetOwningPlayer()->GetNetMode() != ENetMode::NM_DedicatedServer)
+	// {
+	// 	InventoryComponent->OnItemEquipped.Broadcast(HoverItem->GetInventoryItem());
+	// }
 
 	// Clear Hover Item
 	Grid_Equippables->ClearHoverItem();

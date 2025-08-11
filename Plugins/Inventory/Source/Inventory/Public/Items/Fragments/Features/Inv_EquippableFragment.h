@@ -46,5 +46,6 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FName SocketAttachPoint {NAME_None};
 
+	UPROPERTY(EditAnywhere, Category = "Inventory")
 	FGameplayTag EquipmentType = FGameplayTag::EmptyTag;
 };

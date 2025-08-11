@@ -92,7 +92,7 @@ AInv_EquipActor* UInv_EquipmentComponent::FindEquippedActorByTag(const FGameplay
 {
 	auto FoundActor = EquippedActors.FindByPredicate([&EquipmentTypeTag](const AInv_EquipActor* Actor)
 	{
-		return Actor->GetEquipmentTypeTag().MatchesTag(EquipmentTypeTag);
+		return Actor->GetEquipmentTypeTag().MatchesTagExact(EquipmentTypeTag);
 	});
 	return FoundActor ? *FoundActor : nullptr;
 }
