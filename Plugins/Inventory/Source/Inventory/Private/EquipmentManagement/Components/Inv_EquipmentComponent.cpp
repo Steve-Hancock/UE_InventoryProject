@@ -11,20 +11,24 @@
 #include "Items/Manifest/Inv_ItemManifest.h"
 
 
+void UInv_EquipmentComponent::SetOwningSkeletalMeshComponent(USkeletalMeshComponent* OwningSkeletalMesh)
+{
+	OwningSkeletalMeshComponent = OwningSkeletalMesh;
+}
+
+void UInv_EquipmentComponent::InitializeOwner(APlayerController* PlayerController)
+{
+	if (IsValid(PlayerController))
+	{
+		OwningPlayerController = PlayerController;
+	}
+	InitInventoryComponent();
+}
+
 void UInv_EquipmentComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	OwningPlayerController = Cast<APlayerController>(GetOwner());
-	if (OwningPlayerController.IsValid())
-	{
-		ACharacter* OwnerCharacter = Cast<ACharacter>(OwningPlayerController->GetPawn());
-		if (IsValid(OwnerCharacter))
-		{
-			OwningSkeletalMeshComponent = OwnerCharacter->GetMesh();
-		}
-		InitInventoryComponent();
-	}
+	InitPlayerController();
 }
 
 void UInv_EquipmentComponent::OnItemEquipped(UInv_InventoryItem* EquippedItem)
@@ -36,8 +40,11 @@ void UInv_EquipmentComponent::OnItemEquipped(UInv_InventoryItem* EquippedItem)
 	FInv_EquippableFragment* EquipmentFragment = ItemManifest.GetFragmentOfTypeMutable<FInv_EquippableFragment>();
 	if (!EquipmentFragment) return;
 
-	EquipmentFragment->OnEquip(OwningPlayerController.Get(), EquippedItem);
-
+	if (!bIsProxy)
+	{
+		EquipmentFragment->OnEquip(OwningPlayerController.Get(), EquippedItem);
+	}
+	
 	if (!OwningSkeletalMeshComponent.IsValid()) return;
 	
 	AInv_EquipActor* SpawnedEquipActor = SpawnEquippedActor(EquipmentFragment, ItemManifest,
@@ -59,8 +66,10 @@ void UInv_EquipmentComponent::OnItemUnequipped(UInv_InventoryItem* UnEquippedIte
 	FInv_EquippableFragment* EquipmentFragment = ItemManifest.GetFragmentOfTypeMutable<FInv_EquippableFragment>();
 	if (!EquipmentFragment) return;
 
-	EquipmentFragment->OnUnequip(OwningPlayerController.Get(), UnEquippedItem);
-
+	if (!bIsProxy)
+	{
+		EquipmentFragment->OnUnequip(OwningPlayerController.Get(), UnEquippedItem);
+	}
 	RemoveEquippedActorByTag(EquipmentFragment->GetEquipmentType());
 }
 
@@ -106,5 +115,33 @@ void UInv_EquipmentComponent::RemoveEquippedActorByTag(const FGameplayTag& Equip
 		EquippedActors.Remove(FoundActor);
 		FoundActor->Destroy();
 	}
+}
+
+void UInv_EquipmentComponent::InitPlayerController()
+{
+	
+	if (OwningPlayerController = Cast<APlayerController>(GetOwner()); OwningPlayerController.IsValid())
+	{
+		ACharacter* OwnerCharacter = Cast<ACharacter>(OwningPlayerController->GetPawn());
+		if (IsValid(OwnerCharacter))
+		{
+			OnPossessedPawnChange(nullptr, OwnerCharacter);
+		}
+		else
+		{
+			OwningPlayerController->OnPossessedPawnChanged.AddDynamic(this, &ThisClass::OnPossessedPawnChange);
+		}
+	
+	}
+}
+
+void UInv_EquipmentComponent::OnPossessedPawnChange(APawn* OldPawn, APawn* NewPawn)
+{
+	ACharacter* OwnerCharacter = Cast<ACharacter>(OwningPlayerController->GetPawn());
+	if (IsValid(OwnerCharacter))
+	{
+		OwningSkeletalMeshComponent = OwnerCharacter->GetMesh();
+	}
+	InitInventoryComponent();
 }
 

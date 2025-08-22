@@ -19,8 +19,9 @@ class INVENTORY_API UInv_EquipmentComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-
-
+	void SetOwningSkeletalMeshComponent(USkeletalMeshComponent* OwningSkeletalMeshComponent);
+	void SetIsProxy(bool bProxy) {bIsProxy = bProxy;};
+	void InitializeOwner(APlayerController* PlayerController);
 protected:
 	virtual void BeginPlay() override;
 
@@ -46,4 +47,10 @@ private:
 
 	AInv_EquipActor* FindEquippedActorByTag(const FGameplayTag& EquipmentTypeTag);
 	void RemoveEquippedActorByTag(const FGameplayTag& EquipmentTypeTag);
+	void InitPlayerController();
+
+	UFUNCTION()
+	void OnPossessedPawnChange(APawn* OldPawn, APawn* NewPawn);
+
+	bool bIsProxy{false};
 };

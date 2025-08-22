@@ -52,11 +52,11 @@ void UInv_InventoryComponent::TryAddItem(UInv_ItemComponent* ItemComponent)
 	else if (Result.TotalRoomToFill > 0)
 	{
 		// This Item type doesn't exist in the inventory. Create a new one and update all pertinent slots.
-		Server_AddNewItem(ItemComponent, Result.bStackable? Result.TotalRoomToFill : 0);
+		Server_AddNewItem(ItemComponent, Result.bStackable ? Result.TotalRoomToFill : 0, Result.Remainder);
 	}
 }
 
-void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent, int32 StackCount)
+void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponent* ItemComponent, int32 StackCount, int32 Remainder)
 {
 	UInv_InventoryItem* NewItem = InventoryList.AddEntry(ItemComponent);
 	NewItem->SetTotalStackCount(StackCount);
@@ -66,7 +66,21 @@ void UInv_InventoryComponent::Server_AddNewItem_Implementation(UInv_ItemComponen
 		OnItemAdded.Broadcast(NewItem);
 	}
 	
-	ItemComponent->PickedUp();
+	// Only destroy the ground item if there is no remainder; otherwise, update the ground item's remaining stack
+	if (Remainder == 0)
+	{
+		ItemComponent->PickedUp();
+	}
+	else
+	{
+		// Update the ground item's manifest with the remaining stack count
+		FInv_ItemManifest Manifest = ItemComponent->GetItemManifest();
+		if (FInv_StackableFragment* StackableFragment = Manifest.GetFragmentOfTypeMutable<FInv_StackableFragment>())
+		{
+			StackableFragment->SetStackCount(Remainder);
+			ItemComponent->InitItemManifest(Manifest);
+		}
+	}
 }
 
 void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemComponent* ItemComponent, int32 StackCount,
@@ -81,10 +95,16 @@ void UInv_InventoryComponent::Server_AddStacksToItem_Implementation(UInv_ItemCom
 	{
 		ItemComponent->PickedUp();	
 	}
-	// else if (FInv_StackableFragment* StackableFragment = ItemComponent->GetItemManifest().GetFragmentOfTypeMutable<FInv_StackableFragment>())
-	// {
-	// 	StackableFragment->SetStackCount(Remainder);
-	// }
+	else
+	{
+		// Update the ground item's manifest with the remaining stack count
+		FInv_ItemManifest Manifest = ItemComponent->GetItemManifest();
+		if (FInv_StackableFragment* StackableFragment = Manifest.GetFragmentOfTypeMutable<FInv_StackableFragment>())
+		{
+			StackableFragment->SetStackCount(Remainder);
+			ItemComponent->InitItemManifest(Manifest);
+		}
+	}
 }
 
 void UInv_InventoryComponent::Server_DropItem_Implementation(UInv_InventoryItem* Item, int32 StackCount)
@@ -189,7 +209,7 @@ void UInv_InventoryComponent::BeginPlay()
 void UInv_InventoryComponent::ConstructInventory()
 {
 	OwningController = Cast<AInv_PlayerController>(GetOwner());
-	checkf(OwningController.IsValid(), TEXT("Inventory Component should have a Player Controller as Owner"))
+	checkf(OwningController.IsValid(), TEXT("Inventory Component should have a Player Controller as Owner"));
 	if (!OwningController->IsLocalController()) return;
 
 	InventoryMenu = CreateWidget<UInv_InventoryBase>(OwningController.Get(), InventoryMenuClass);
