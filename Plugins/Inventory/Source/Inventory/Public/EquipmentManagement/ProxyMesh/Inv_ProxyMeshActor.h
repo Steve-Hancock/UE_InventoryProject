@@ -32,6 +32,6 @@ private:
 	TObjectPtr<USkeletalMeshComponent> ProxySkeletalMeshComponent;
 
 	FTimerHandle TimerForNextTick;
-	void DelayedintializeOwner();
-	void DelayedInitializeation();
+	void DelayedInitializeOwner();
+	void DelayedInitialization();
 };

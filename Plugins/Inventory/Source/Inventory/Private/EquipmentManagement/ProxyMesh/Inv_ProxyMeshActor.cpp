@@ -24,36 +24,36 @@ AInv_ProxyMeshActor::AInv_ProxyMeshActor()
 void AInv_ProxyMeshActor::BeginPlay()
 {
 	Super::BeginPlay();
-	DelayedintializeOwner();
+	DelayedInitializeOwner();
 }
 
-void AInv_ProxyMeshActor::DelayedintializeOwner()
+void AInv_ProxyMeshActor::DelayedInitializeOwner()
 {
 	UWorld* World = GetWorld();
 	if (!IsValid(World))
 	{
-		DelayedInitializeation();
+		DelayedInitialization();
 		return;
 	}
 
 	APlayerController* PlayerController = World->GetFirstPlayerController();
 	if (!IsValid(PlayerController))
 	{
-		DelayedInitializeation();
+		DelayedInitialization();
 		return;
 	}
 
 	ACharacter* Character = Cast<ACharacter>(PlayerController->GetPawn());
-	if (!IsValid(PlayerController))
+	if (!IsValid(Character))
 	{
-		DelayedInitializeation();
+		DelayedInitialization();
 		return;
 	}
 
 	USkeletalMeshComponent* CharacterSkeletalMeshComponent = Character->GetMesh();
 	if (!IsValid(CharacterSkeletalMeshComponent))
 	{
-		DelayedInitializeation();
+		DelayedInitialization();
 		return;
 	}
 
@@ -64,9 +64,9 @@ void AInv_ProxyMeshActor::DelayedintializeOwner()
 	EquipmentComponent->InitializeOwner(PlayerController);
 }
 
-void AInv_ProxyMeshActor::DelayedInitializeation()
+void AInv_ProxyMeshActor::DelayedInitialization()
 {
 	FTimerDelegate TimerDelegate;
-	TimerDelegate.BindUObject(this,&ThisClass::DelayedintializeOwner);
+	TimerDelegate.BindUObject(this,&ThisClass::DelayedInitializeOwner);
 	GetWorld()->GetTimerManager().SetTimerForNextTick(TimerDelegate);
 }
