@@ -34,7 +34,16 @@ void UInv_EquipmentComponent::BeginPlay()
 void UInv_EquipmentComponent::OnItemEquipped(UInv_InventoryItem* EquippedItem)
 {
 	if (!EquippedItem) return;
-	if (!OwningPlayerController->HasAuthority()) return;
+
+	if (bIsProxy)
+	{
+		if (!OwningPlayerController->IsLocalController()) return;
+	}
+	else
+	{
+		if (!OwningPlayerController->HasAuthority()) return;
+	}
+
 
 	FInv_ItemManifest& ItemManifest = EquippedItem->GetItemManifestMutable();
 	FInv_EquippableFragment* EquipmentFragment = ItemManifest.GetFragmentOfTypeMutable<FInv_EquippableFragment>();
@@ -49,18 +58,24 @@ void UInv_EquipmentComponent::OnItemEquipped(UInv_InventoryItem* EquippedItem)
 	
 	AInv_EquipActor* SpawnedEquipActor = SpawnEquippedActor(EquipmentFragment, ItemManifest,
 		OwningSkeletalMeshComponent.Get());
-
+	if (bIsProxy) SpawnedEquipActor->SetReplicates(false); 
 	EquippedActors.Add(SpawnedEquipActor);
 	
 }
 
 void UInv_EquipmentComponent::OnItemUnequipped(UInv_InventoryItem* UnEquippedItem)
 {
-	// Add stack trace or unique identifier
-	UE_LOG(LogTemp, Warning, TEXT("OnUnequip called from: %s"), *FString(__FUNCTION__));
-
+	
 	if (!UnEquippedItem) return;
-	if (!OwningPlayerController->HasAuthority()) return;
+	if (bIsProxy)
+	{
+		if (!OwningPlayerController->IsLocalController()) return;
+	}
+	else
+	{
+		if (!OwningPlayerController->HasAuthority()) return;
+	}
+
 
 	FInv_ItemManifest& ItemManifest = UnEquippedItem->GetItemManifestMutable();
 	FInv_EquippableFragment* EquipmentFragment = ItemManifest.GetFragmentOfTypeMutable<FInv_EquippableFragment>();
@@ -140,7 +155,12 @@ void UInv_EquipmentComponent::OnPossessedPawnChange(APawn* OldPawn, APawn* NewPa
 	ACharacter* OwnerCharacter = Cast<ACharacter>(OwningPlayerController->GetPawn());
 	if (IsValid(OwnerCharacter))
 	{
-		OwningSkeletalMeshComponent = OwnerCharacter->GetMesh();
+		// Only set the owning skeletal mesh to the character's mesh if we don't already have one set.
+		// This preserves a proxy mesh that may have been assigned explicitly (e.g., by AInv_ProxyMeshActor).
+		if (!OwningSkeletalMeshComponent.IsValid())
+		{
+			OwningSkeletalMeshComponent = OwnerCharacter->GetMesh();
+		}
 	}
 	InitInventoryComponent();
 }

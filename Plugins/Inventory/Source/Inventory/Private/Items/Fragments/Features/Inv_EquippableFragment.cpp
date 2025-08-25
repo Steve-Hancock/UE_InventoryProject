@@ -114,6 +114,5 @@ void FInv_EquippableFragment::DestroyAttachedActor()
 
 void FInv_EquippableFragment::SetEquippedActor(AInv_EquipActor* EquipActor)
 {
-	DestroyAttachedActor();
 	EquippedActor = TWeakObjectPtr<AInv_EquipActor>(EquipActor);
 }
